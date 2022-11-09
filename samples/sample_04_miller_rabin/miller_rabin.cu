@@ -198,6 +198,7 @@ class miller_rabin_t {
     mpz_init(candidate);
     for(index=0;index<instance_count;index++) {
       to_mpz(candidate, instances[index].candidate._limbs, params::BITS/32);
+      mpz_out_str(stdout,10,candidate);
       gmp_prime=(mpz_probab_prime_p(candidate, prime_count)!=0);
       xmp_prime=(instances[index].passed==prime_count);
       
@@ -207,7 +208,6 @@ class miller_rabin_t {
         match=false;
       }
       if(xmp_prime)
-        mpz_out_str(stdout,10,candidate);
         total++;
     }
     if(match)
