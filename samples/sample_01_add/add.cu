@@ -59,7 +59,7 @@ IN THE SOFTWARE.
 // IMPORTANT:  DO NOT DEFINE TPI OR BITS BEFORE INCLUDING CGBN
 #define TPI 32
 #define BITS 1024
-#define INSTANCES 100000
+#define INSTANCES 10
 
 // Declare the instance type
 typedef struct {
@@ -85,6 +85,7 @@ void verify_results(instance_t *instances, uint32_t count) {
   
   for(int index=0;index<count;index++) {
     add_words(correct, instances[index].a._limbs, instances[index].b._limbs, BITS/32);
+    printf(index);
     if(compare_words(correct, instances[index].sum._limbs, BITS/32)!=0) {
       printf("gpu add kernel failed on instance %d\n", index);
       return;
