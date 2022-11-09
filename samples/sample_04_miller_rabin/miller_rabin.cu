@@ -196,7 +196,7 @@ class miller_rabin_t {
     bool  gmp_prime, xmp_prime, match=true;
 
     mpz_init(candidate);
-    
+    gmp_printf("attempt 3: %Zd \n", candidate);
     for(index=0;index<instance_count;index++) {
       to_mpz(candidate, instances[index].candidate._limbs, params::BITS/32);
       gmp_prime=(mpz_probab_prime_p(candidate, prime_count)!=0);
