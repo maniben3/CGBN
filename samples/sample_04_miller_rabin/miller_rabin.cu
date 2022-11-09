@@ -200,7 +200,8 @@ class miller_rabin_t {
     for(index=0;index<instance_count;index++) {
       to_mpz(candidate, instances[index].candidate._limbs, params::BITS/32);
       gmp_prime=(mpz_probab_prime_p(candidate, prime_count)!=0);
-      
+      gmp_printf("attempt 3: %Zd \n",candidate);
+      mpz_out_str(stdout,10,candidate);
       xmp_prime=(instances[index].passed==prime_count);
       
       if(gmp_prime!=xmp_prime) {
