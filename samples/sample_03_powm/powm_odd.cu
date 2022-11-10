@@ -343,8 +343,10 @@ void run_test(uint32_t instance_count) {
   CUDA_CHECK(cgbn_error_report_free(report));
 }
 
-int main(int argc, char** argv) {
+int main() {
+  int fu;
+  printf("Enter an integer: ");
+  scanf("%d", &fu);
   typedef powm_params_t<8, 1024, 5> params;
-  
-  run_test<params>(argc);
+  run_test<params>(fu);
 }
