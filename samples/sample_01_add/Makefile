@@ -34,7 +34,7 @@ volta:
 	nvcc $(INC) $(LIB) -I../../include -arch=sm_70 add.cu -o add -lgmp
 
 turing: 
-	nvcc --shared -Xcompiler -fPIC -Xcompiler $(INC) $(LIB) -I../../include -arch=sm_75 add.cu -o add -lgmp -Xcompiler -v
+	nvcc --shared -Xcompiler -fPIC -Xcompiler $(INC) $(LIB) -I../../include -arch=sm_75 add.cu -o add.so -lgmp -Xcompiler -v
 
 ampere: 
 	nvcc $(INC) $(LIB) -I../../include -arch=sm_80 add.cu -o add -lgmp
