@@ -59,7 +59,7 @@ IN THE SOFTWARE.
 // IMPORTANT:  DO NOT DEFINE TPI OR BITS BEFORE INCLUDING CGBN
 #define TPI 32
 #define BITS 1024
-#define INSTANCES 100000
+#define INSTANCES 100
 
 // Declare the instance type
 typedef struct {
@@ -80,14 +80,20 @@ instance_t *generate_instances(uint32_t count) {
 }
 
 // support routine to verify the GPU results using the CPU
-void verify_results(instance_t *instances, uint32_t count) {
-  uint32_t correct[BITS/32];
-  
+__host__ static void verify_results(instance_t *instances, uint32_t count) {
+  mpz_t a, b, sum,correct;
+  mpz_init(a);
+  mpz_init(b);
+  mpz_init(sum);
+  mpz_init(correct);
   for(int index=0;index<count;index++) {
-    add_words(correct, instances[index].a._limbs, instances[index].b._limbs, BITS/32);
-    if(compare_words(correct, instances[index].sum._limbs, BITS/32)!=0) {
-      printf("gpu add kernel failed on instance %d\n", index);
-      return;
+    to_mpz(x, instances[index].a._limbs, BITS/32);
+    to_mpz(p, instances[index].b._limbs, BITS/32);
+    to_mpz(m, instances[index].sum._limbs, BITS/32);
+    mpz_add (correct,a,b)
+    if(mpz_cmp(correct, sum)!=0) {
+        printf("gpu inverse kernel failed on instance %d\n", index);
+        return;
     }
   }
   printf("All results match\n");
