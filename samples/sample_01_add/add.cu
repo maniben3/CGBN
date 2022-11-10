@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <iostream>
 #include <cuda.h>
 #include <gmp.h>
 #include "cgbn/cgbn.h"
@@ -60,7 +61,7 @@ IN THE SOFTWARE.
 #define TPI 32
 #define BITS 1024
 #define INSTANCES 10
-# define DELLEXPORT extern "C" __declspec(dllexport)
+#define DELLEXPORT extern "C" __declspec(dllexport)
 
 // Declare the instance type
 typedef struct {
