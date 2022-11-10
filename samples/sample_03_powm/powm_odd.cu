@@ -343,7 +343,7 @@ void run_test(uint32_t instance_count) {
   CUDA_CHECK(cgbn_error_report_free(report));
 }
 
-int main(int argc, int* argv) {
+int main(int argc, char** argv) {
   typedef powm_params_t<8, 1024, 5> params;
   
   run_test<params>(argv[0]);
