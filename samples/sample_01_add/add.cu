@@ -117,10 +117,11 @@ __global__ void kernel_add(cgbn_error_report_t *report, instance_t *instances, u
 }
 
 extern "C" {
-  void cuda_sum(){
+  void cuda_sum(int c){
+  
   instance_t          *instances, *gpuInstances;
   cgbn_error_report_t *report;
-  
+  printf("%d/n",c);
   printf("Genereating instances ...\n");
   instances=generate_instances(INSTANCES);
   
