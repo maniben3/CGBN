@@ -344,9 +344,8 @@ void run_test(uint32_t instance_count) {
 }
 
 int main() {
-  int fu;
+  int fu=10000;
   printf("Enter an integer: ");
-  scanf("%d", &fu);
   typedef powm_params_t<8, 1024, 5> params;
   run_test<params>(fu);
 }
