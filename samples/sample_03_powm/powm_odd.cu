@@ -342,10 +342,11 @@ void run_test(uint32_t instance_count) {
   CUDA_CHECK(cudaFree(gpuInstances));
   CUDA_CHECK(cgbn_error_report_free(report));
 }
-
+extern "C" {
 int main() {
   int fu=10000;
   printf("Enter an integer: ");
   typedef powm_params_t<8, 1024, 5> params;
   run_test<params>(fu);
+}
 }
