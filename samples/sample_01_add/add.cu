@@ -152,3 +152,4 @@ extern "C" {
   CUDA_CHECK(cudaFree(gpuInstances));
   CUDA_CHECK(cgbn_error_report_free(report));
 }
+}
