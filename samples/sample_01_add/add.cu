@@ -81,9 +81,9 @@ instance_t *generate_instances(uint32_t count) {
 
 // support routine to verify the GPU results using the CPU
 __host__ static void verify_results(instance_t *instances, uint32_t count) {
-  mpz_t a, b, sum,correct;
-  mpz_init(a);
-  mpz_init(b);
+  mpz_t x, p, sum,correct;
+  mpz_init(x);
+  mpz_init(p);
   mpz_init(sum);
   mpz_init(correct);
   for(int index=0;index<count;index++) {
@@ -91,7 +91,7 @@ __host__ static void verify_results(instance_t *instances, uint32_t count) {
     to_mpz(p, instances[index].b._limbs, BITS/32);
     to_mpz(m, instances[index].sum._limbs, BITS/32);
     mpz_add (correct,a,b)
-    if(mpz_cmp(correct, sum)!=0) {
+    if(mpz_cmp(correct, m)!=0) {
         printf("gpu inverse kernel failed on instance %d\n", index);
         return;
     }
