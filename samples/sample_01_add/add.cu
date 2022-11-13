@@ -46,7 +46,7 @@ IN THE SOFTWARE.
 // IMPORTANT:  DO NOT DEFINE TPI OR BITS BEFORE INCLUDING CGBN
 #define TPI 32
 #define BITS 1024
-#define INSTANCES 100000
+#define INSTANCES 100000000
 inline BYTE *create_bitarray(size_t elements) {
     size_t bytes = elements / 8 + ((elements % 8) > 1);
     return (BYTE *) calloc(bytes, 1);
