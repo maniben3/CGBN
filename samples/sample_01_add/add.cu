@@ -59,7 +59,7 @@ IN THE SOFTWARE.
 // IMPORTANT:  DO NOT DEFINE TPI OR BITS BEFORE INCLUDING CGBN
 #define TPI 32
 #define BITS 1024
-#define INSTANCES 10
+#define INSTANCES 100000
 
 // Declare the instance type
 typedef struct {
@@ -112,16 +112,14 @@ __global__ void kernel_add(cgbn_error_report_t *report, instance_t *instances, u
 
   cgbn_load(bn_env, a, &(instances[instance].a));      // load my instance's a value
   cgbn_load(bn_env, b, &(instances[instance].b));      // load my instance's b value
-  cgbn_sub(bn_env, r, a, b);                           // r=a+b
+  cgbn_add(bn_env, r, a, b);                           // r=a+b
   cgbn_store(bn_env, &(instances[instance].sum), r);   // store r into sum
 }
 
-extern "C" {
-  void cuda_sum(int c){
-  
+int main() {
   instance_t          *instances, *gpuInstances;
   cgbn_error_report_t *report;
-  printf("%d/n",c);
+  
   printf("Genereating instances ...\n");
   instances=generate_instances(INSTANCES);
   
@@ -152,5 +150,4 @@ extern "C" {
   free(instances);
   CUDA_CHECK(cudaFree(gpuInstances));
   CUDA_CHECK(cgbn_error_report_free(report));
-}
 }
