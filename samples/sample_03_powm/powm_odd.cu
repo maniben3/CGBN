@@ -246,7 +246,7 @@ class powm_odd_t {
     mpz_init(m);
     mpz_init(computed);
     mpz_init(correct);
-    
+    gmp_printf("attempt 3: %Zd \n", x);
     for(int index=0;index<count;index++) {
       to_mpz(x, instances[index].x._limbs, params::BITS/32);
       to_mpz(p, instances[index].power._limbs, params::BITS/32);
@@ -285,18 +285,16 @@ __global__ void kernel_powm_odd(cgbn_error_report_t *report, typename powm_odd_t
 
   powm_odd_t<params>                 po(cgbn_report_monitor, report, instance);
   typename powm_odd_t<params>::bn_t  r, x, p, m;
+  
   // the loads and stores can go in the class, but it seems more natural to have them
-  // here and to pass in and out bignums 
-  env_t          bn_env(bn_context.env<env_t>());                     // construct an environment for 1024-bit math
-  env_t::cgbn_t y;  
+  // here and to pass in and out bignums
   cgbn_load(po._env, x, &(instances[instance].x));
   cgbn_load(po._env, p, &(instances[instance].power));
-  cgbn_add(bn_env, y, x, p);
-  cgbn_load(po._env, m, &(instances[instance].y));
+  cgbn_load(po._env, m, &(instances[instance].modulus));
   
   // this can be either fixed_window_powm_odd or sliding_window_powm_odd.  
   // when TPI<32, fixed window runs much faster because it is less divergent, so we use it here
-  po.fixed_window_powm_odd(r, x, p, y);
+  po.fixed_window_powm_odd(r, x, p, m);
   //   OR
   // po.sliding_window_powm_odd(r, x, p, m);
   
@@ -337,7 +335,7 @@ void run_test(uint32_t instance_count) {
   CUDA_CHECK(cudaMemcpy(instances, gpuInstances, sizeof(instance_t)*instance_count, cudaMemcpyDeviceToHost));
   
   printf("Verifying the results ...\n");
-  //powm_odd_t<params>::verify_results(instances, instance_count);
+  powm_odd_t<params>::verify_results(instances, instance_count);
   
   // clean up
   free(instances);
@@ -348,5 +346,5 @@ void run_test(uint32_t instance_count) {
 int main() {
   typedef powm_params_t<8, 1024, 5> params;
   
-  run_test<params>(200000);
+  run_test<params>(10);
 }
