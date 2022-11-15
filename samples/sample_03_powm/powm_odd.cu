@@ -253,7 +253,6 @@ class powm_odd_t {
       if (mpz_cmp_ui(computed, 1) != 0) {
        gmp_printf("computed: %Zd \n", computed);
        printf("gpu inverse kernel failed on instance %d\n", index);
-        return;
       }
     }
   
