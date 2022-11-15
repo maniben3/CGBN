@@ -114,7 +114,7 @@ __global__ void kernel_add(cgbn_error_report_t *report, instance_t *instances, u
   cgbn_load(bn_env, a, &(instances[instance].a));      // load my instance's a value
   cgbn_load(bn_env, b, &(instances[instance].b));      // load my instance's b value
   cgbn_add(bn_env, c, a, b);                           // r=a+b
-  cgbn_add(bn_env, r, c,b);     
+  cgbn_sub(bn_env, r, c,b);     
   cgbn_store(bn_env, &(instances[instance].sum), r);   // store r into sum
 }
 
