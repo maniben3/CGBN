@@ -246,13 +246,12 @@ class powm_odd_t {
     mpz_init(m);
     mpz_init(computed);
     mpz_init(correct);
-    gmp_printf("attempt 3: %Zd \n", x);
     for(int index=0;index<count;index++) {
       to_mpz(x, instances[index].x._limbs, params::BITS/32);
       to_mpz(p, instances[index].power._limbs, params::BITS/32);
       to_mpz(m, instances[index].modulus._limbs, params::BITS/32);
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
-      
+      gmp_printf("attempt 3: %Zd \n", x);
       mpz_powm(correct, x, p, m);
       if(mpz_cmp(correct, computed)!=0) {
         printf("gpu inverse kernel failed on instance %d\n", index);
