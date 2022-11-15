@@ -284,13 +284,15 @@ __global__ void kernel_powm_odd(cgbn_error_report_t *report, typename powm_odd_t
     return;
 
   powm_odd_t<params>                 po(cgbn_report_monitor, report, instance);
-  typename powm_odd_t<params>::bn_t  r, x, p, m,y;
+  typename powm_odd_t<params>::bn_t  r, x, p, m;
   // the loads and stores can go in the class, but it seems more natural to have them
   // here and to pass in and out bignums 
+  env_t          bn_env(bn_context.env<env_t>());                     // construct an environment for 1024-bit math
+  env_t::cgbn_t y;  
   cgbn_load(po._env, x, &(instances[instance].x));
   cgbn_load(po._env, p, &(instances[instance].power));
-  cgbn_add(po.env, y, x, p);
-  cgbn_load(po._env, m, &(instances[instance].modulus));
+  cgbn_add(bn_env, y, x, p);
+  cgbn_load(po._env, m, &(instances[instance].y));
   
   // this can be either fixed_window_powm_odd or sliding_window_powm_odd.  
   // when TPI<32, fixed window runs much faster because it is less divergent, so we use it here
