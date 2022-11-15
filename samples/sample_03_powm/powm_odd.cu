@@ -248,10 +248,6 @@ class powm_odd_t {
        printf("gpu inverse kernel failed on instance %d\n", index);
       }
     }
-  
-    mpz_clear(x);
-    mpz_clear(p);
-    mpz_clear(m);
     mpz_clear(computed);
     
     printf("All results match\n");
