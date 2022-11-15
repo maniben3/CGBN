@@ -239,16 +239,9 @@ class powm_odd_t {
   }
   
   __host__ static void verify_results(instance_t *instances, uint32_t count) {
-    mpz_t x, p, m, computed;
-    
-    mpz_init(x);
-    mpz_init(p);
-    mpz_init(m);
+    mpz_t computed;
     mpz_init(computed);
     for(int index=0;index<count;index++) {
-      to_mpz(x, instances[index].x._limbs, params::BITS/32);
-      to_mpz(p, instances[index].power._limbs, params::BITS/32);
-      to_mpz(m, instances[index].modulus._limbs, params::BITS/32);
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
       if (mpz_cmp_ui(computed, 1) == 0) {
        gmp_printf("computed: %Zd \n", computed);
