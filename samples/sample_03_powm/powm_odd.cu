@@ -239,7 +239,7 @@ class powm_odd_t {
   }
   
   __host__ static void verify_results(instance_t *instances, uint32_t count) {
-    mpz_t x, p, m, computed
+    mpz_t x, p, m, computed;
     
     mpz_init(x);
     mpz_init(p);
