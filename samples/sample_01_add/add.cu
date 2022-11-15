@@ -59,7 +59,7 @@ IN THE SOFTWARE.
 // IMPORTANT:  DO NOT DEFINE TPI OR BITS BEFORE INCLUDING CGBN
 #define TPI 32
 #define BITS 1024
-#define INSTANCES 10
+#define INSTANCES 1000000
 
 // Declare the instance type
 typedef struct {
@@ -82,13 +82,12 @@ instance_t *generate_instances(uint32_t count) {
 // support routine to verify the GPU results using the CPU
 void verify_results(instance_t *instances, uint32_t count) {
   uint32_t correct[BITS/32];
-  printf("%d\n ",count);
+  
   for(int index=0;index<count;index++) {
-    printf("%d\n ", index);
     add_words(correct, instances[index].a._limbs, instances[index].b._limbs, BITS/32);
     if(compare_words(correct, instances[index].sum._limbs, BITS/32)!=0) {
-     printf("gpu add kernel failed on instance %d\n", index);
-      //return;
+      printf("gpu add kernel failed on instance %d\n", index);
+      return;
     }
   }
   printf("All results match\n");
@@ -109,12 +108,11 @@ __global__ void kernel_add(cgbn_error_report_t *report, instance_t *instances, u
 
   context_t      bn_context(cgbn_report_monitor, report, instance);   // construct a context
   env_t          bn_env(bn_context.env<env_t>());                     // construct an environment for 1024-bit math
-  env_t::cgbn_t  a, b, r,c;                                             // define a, b, r as 1024-bit bignums
+  env_t::cgbn_t  a, b, r;                                             // define a, b, r as 1024-bit bignums
 
   cgbn_load(bn_env, a, &(instances[instance].a));      // load my instance's a value
   cgbn_load(bn_env, b, &(instances[instance].b));      // load my instance's b value
-  cgbn_add(bn_env, c, a, b);                           // r=a+b
-  cgbn_sub(bn_env, r, c,b);     
+  cgbn_add(bn_env, r, a, b);                           // r=a+b
   cgbn_store(bn_env, &(instances[instance].sum), r);   // store r into sum
 }
 
