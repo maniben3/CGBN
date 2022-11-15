@@ -284,13 +284,12 @@ __global__ void kernel_powm_odd(cgbn_error_report_t *report, typename powm_odd_t
     return;
 
   powm_odd_t<params>                 po(cgbn_report_monitor, report, instance);
-  typename powm_odd_t<params>::bn_t  r, x, p, m;
-  env_t::cgbn_t  y;
+  typename powm_odd_t<params>::bn_t  r, x, p, m,y;
   // the loads and stores can go in the class, but it seems more natural to have them
   // here and to pass in and out bignums 
   cgbn_load(po._env, x, &(instances[instance].x));
   cgbn_load(po._env, p, &(instances[instance].power));
-  cgbn_add(bn_env, y, x, p);
+  cgbn_add(po.env, y, x, p);
   cgbn_load(po._env, m, &(instances[instance].modulus));
   
   // this can be either fixed_window_powm_odd or sliding_window_powm_odd.  
