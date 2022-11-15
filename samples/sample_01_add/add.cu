@@ -84,7 +84,7 @@ void verify_results(instance_t *instances, uint32_t count) {
   uint32_t correct[BITS/32];
   
   for(int index=0;index<count;index++) {
-    printf("%lu ", index);
+    printf("%d ", index);
     add_words(correct, instances[index].a._limbs, instances[index].b._limbs, BITS/32);
     if(compare_words(correct, instances[index].sum._limbs, BITS/32)!=0) {
       printf("gpu add kernel failed on instance %d\n", index);
