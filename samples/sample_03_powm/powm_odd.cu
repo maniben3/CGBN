@@ -243,7 +243,7 @@ class powm_odd_t {
     mpz_init(computed);
     for(int index=0;index<count;index++) {
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
-      if (mpz_cmp_ui(computed, 1) == 0) {
+      if (mpz_cmp_ui(computed, 1) != 0) {
        gmp_printf("computed: %Zd \n", computed);
        printf("gpu inverse kernel failed on instance %d\n", index);
       }
@@ -330,5 +330,5 @@ void run_test(uint32_t instance_count) {
 int main() {
   typedef powm_params_t<8, 1024, 5> params;
   
-  run_test<params>(1000000);
+  run_test<params>(10);
 }
