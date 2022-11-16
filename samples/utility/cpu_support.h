@@ -45,9 +45,7 @@ void from_mpz(mpz_t s, uint32_t *x, uint32_t count) {
 
 uint32_t random_word() {
   uint32_t random;
-
-  random=rand() & 0xFFFF;
-  random=(random<<16) + (rand() & 0xFFFF);
+  random=0xffffffff;
   return random;
 }
 
