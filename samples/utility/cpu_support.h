@@ -126,7 +126,5 @@ void swap_words(uint32_t *a, uint32_t *b, uint32_t count) {
 
 void random_words(uint32_t *x, uint32_t count) {
   int index;
-
-  for(index=0;index<count;index++)
-    x[index]=random_word();
+  uint32_t x[31]={1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 }
