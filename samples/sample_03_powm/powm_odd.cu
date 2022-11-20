@@ -21,12 +21,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 ***/
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <vector>
-#include <cstdlib>
-#include <stdint.h>
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -49,7 +44,7 @@ IN THE SOFTWARE.
 //   TPI             - threads per instance
 //   BITS            - number of bits per instance
 //   WINDOW_BITS     - number of bits to use for the windowed exponentiation
-const int64_t L1D_CACHE_SIZE = 32768;
+
 template<uint32_t tpi, uint32_t bits, uint32_t window_bits>
 class powm_params_t {
   public:
@@ -246,11 +241,12 @@ class powm_odd_t {
   __host__ static void verify_results(instance_t *instances, uint32_t count) {
     mpz_t computed;
     mpz_init(computed);
+    
     for(int index=0;index<count;index++) {
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
-      if (mpz_cmp_ui(computed, 1) != 0) {
-       gmp_printf("computed: %Zd \n", computed);
-       printf("gpu inverse kernel failed on instance %d\n", index);
+      if(mpz_cmp(1, computed)==0) {
+        printf("gpu inverse kernel failed on instance %d\n", index);
+        return;
       }
     }
     mpz_clear(computed);
@@ -290,67 +286,6 @@ __global__ void kernel_powm_odd(cgbn_error_report_t *report, typename powm_odd_t
   cgbn_store(po._env, &(instances[instance].result), r);
 }
 
-
-/// Generate primes using the segmented sieve of Eratosthenes.
-/// This algorithm uses O(n log log n) operations and O(sqrt(n)) space.
-/// @param limit  Sieve primes <= limit.
-///
-void segmented_sieve(int64_t limit)
-{
-  int64_t sqrt = (int64_t) std::sqrt(limit);
-  int64_t segment_size = std::max(sqrt, L1D_CACHE_SIZE);
-  int64_t count = (limit < 2) ? 0 : 1;
-
-  // we sieve primes >= 3
-  int64_t i = 3;
-  int64_t n = 3;
-  int64_t s = 3;
-
-  std::vector<char> sieve(segment_size);
-  std::vector<char> is_prime(sqrt + 1, true);
-  std::vector<int64_t> primes;
-  std::vector<int64_t> multiples;
-
-  for (int64_t low = 0; low <= limit; low += segment_size)
-  {
-    std::fill(sieve.begin(), sieve.end(), true);
-
-    // current segment = [low, high]
-    int64_t high = low + segment_size - 1;
-    high = std::min(high, limit);
-
-    // generate sieving primes using simple sieve of Eratosthenes
-    for (; i * i <= high; i += 2)
-      if (is_prime[i])
-        for (int64_t j = i * i; j <= sqrt; j += i)
-          is_prime[j] = false;
-
-    // initialize sieving primes for segmented sieve
-    for (; s * s <= high; s += 2)
-    {
-      if (is_prime[s])
-      {
-           primes.push_back(s);
-        multiples.push_back(s * s - low);
-      }
-    }
-
-    // sieve the current segment
-    for (std::size_t i = 0; i < primes.size(); i++)
-    {
-      int64_t j = multiples[i];
-      for (int64_t k = primes[i] * 2; j < segment_size; j += k)
-        sieve[j] = false;
-      multiples[i] = j - segment_size;
-    }
-
-    for (; n <= high; n += 2)
-      if (sieve[n - low]) // n is a prime
-        count++;
-  }
-
-  std::cout << count << " primes found." << std::endl;
-}
 template<class params>
 void run_test(uint32_t instance_count) {
   typedef typename powm_odd_t<params>::instance_t instance_t;
@@ -359,7 +294,7 @@ void run_test(uint32_t instance_count) {
   cgbn_error_report_t *report;
   int32_t              TPB=(params::TPB==0) ? 128 : params::TPB;    // default threads per block to 128
   int32_t              TPI=params::TPI, IPB=TPB/TPI;                // IPB is instances per block
-  segmented_sieve(1000000000);
+  
   printf("Genereating instances ...\n");
   instances=powm_odd_t<params>::generate_instances(instance_count);
   
@@ -396,5 +331,5 @@ void run_test(uint32_t instance_count) {
 int main() {
   typedef powm_params_t<8, 1024, 5> params;
   
-  run_test<params>(10);
+  run_test<params>(500000);
 }
