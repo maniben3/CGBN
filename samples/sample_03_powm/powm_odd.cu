@@ -44,7 +44,45 @@ IN THE SOFTWARE.
 //   TPI             - threads per instance
 //   BITS            - number of bits per instance
 //   WINDOW_BITS     - number of bits to use for the windowed exponentiation
+uint32_t base [640000];
+uint32_t power[100000000];
+uint32_t expo [100000000];
+uint32_t chk [100000000];
+base ={0xafffffff,0xbfffffff,0xffffafff,0xffffffff,0xfffffff,0xffffffff,0xaffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffff,0xffbffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffaffff};
+power ={0xafffffff,0xbfffffff,0xffffafff,0xffffffff,0xfffffff,0xffffffff,0xaffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffff,0xffbffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffaffff};
+expo ={0xafffffff,0xbfffffff,0xffffafff,0xffffffff,0xfffffff,0xffffffff,0xaffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffff,0xffffff,0xffbffff,0xffffffff,0xffffffff,0xffffff,0xffffffff,0xffaffff};
 
+uint32_t random_word_base(int x) {
+  return base[x];
+}
+
+void random_words_base(uint32_t *x, uint32_t count) {
+  int index;
+
+  for(index=count;index<count+32;index++)
+    x[index-count]=random_word_base(index);
+}
+//power
+uint32_t random_word_power(int x) {
+  return power[x];
+}
+void random_words_power(uint32_t *x, uint32_t count) {
+  int index;
+
+  for(index=count;index<count+32;index++)
+    x[index-count]=random_word_power(index);
+}
+//exp
+uint32_t random_word_exp(int x) {
+  return expo[x];
+}
+
+void random_words_exp(uint32_t *x, uint32_t count) {
+  int index;
+
+  for(index=count;index<count+32;index++)
+    x[index-count]=random_word_exp(index);
+}
 template<uint32_t tpi, uint32_t bits, uint32_t window_bits>
 class powm_params_t {
   public:
