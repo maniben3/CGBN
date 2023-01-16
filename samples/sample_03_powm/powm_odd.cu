@@ -258,6 +258,7 @@ class powm_odd_t {
       mpz_out_str (stdout, 16, m);
       printf ("\n");
       mpz_out_str (stdout, 16, computed);
+      }
     mpz_clear(x);
     mpz_clear(p);
     mpz_clear(m);
