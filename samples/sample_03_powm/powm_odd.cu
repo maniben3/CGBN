@@ -251,6 +251,9 @@ class powm_odd_t {
       to_mpz(p, instances[index].power._limbs, params::BITS/32);
       to_mpz(m, instances[index].modulus._limbs, params::BITS/32);
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
+      if(mpz_cmp_ui(computed,1)== 0) {
+         printf ("hi");
+      }
       mpz_out_str (stdout, 16, x);
       printf ("\n");
       mpz_out_str (stdout, 16, p);
@@ -258,6 +261,7 @@ class powm_odd_t {
       mpz_out_str (stdout, 16, m);
       printf ("\n");
       mpz_out_str (stdout, 16, computed);
+      printf ("\n");
       }
     mpz_clear(x);
     mpz_clear(p);
