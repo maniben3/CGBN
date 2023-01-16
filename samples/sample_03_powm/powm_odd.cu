@@ -235,16 +235,16 @@ class powm_odd_t {
       instances[index].modulus._limbs[0] |= 1;
 
       // ensure modulus is greater than 
-      //if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)>0) {
-      //  swap_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32);
+      if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)>0) {
+       swap_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32);
         
         // modulus might now be even, ensure it's odd
-      //  instances[index].modulus._limbs[0] |= 1;
-     // }
-      //else if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)==0) {
+       instances[index].modulus._limbs[0] |= 1;
+      }
+      else if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)==0) {
         // since modulus is odd and modulus = x, we can just subtract 1 from x
-       // instances[index].x._limbs[0] -= 1;
-      //}
+       instances[index].x._limbs[0] -= 1;
+     }
     }
     return instances;
   }
