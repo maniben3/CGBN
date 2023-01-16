@@ -239,13 +239,12 @@ class powm_odd_t {
   }
   
   __host__ static void verify_results(instance_t *instances, uint32_t count) {
-    mpz_t x, p, m, computed, correct;
+    mpz_t x, p, m, computed;
     
     mpz_init(x);
     mpz_init(p);
     mpz_init(m);
     mpz_init(computed);
-    mpz_init(correct);
     
     for(int index=0;index<count;index++) {
       to_mpz(x, instances[index].x._limbs, params::BITS/32);
@@ -263,7 +262,6 @@ class powm_odd_t {
     mpz_clear(p);
     mpz_clear(m);
     mpz_clear(computed);
-    mpz_clear(correct);
     
     printf("All results match\n");
   }
@@ -344,6 +342,6 @@ void run_test(uint32_t instance_count) {
 
 int main() {
   typedef powm_params_t<8, 1024, 5> params;
-  
   run_test<params>(10);
+  return 0;
 }
