@@ -1,3 +1,27 @@
+/***
+
+Copyright (c) 2018-2019, NVIDIA CORPORATION.  All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+
+***/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -21,40 +45,6 @@
 //   BITS            - number of bits per instance
 //   WINDOW_BITS     - number of bits to use for the windowed exponentiation
 
-uint32_t basecheck[] = {0x7b8c74ad, 0x99c4b23a, 0xa08a5b6f, 0xf5d208b1, 0x7210b57f, 0x33ece712, 0xfa660c0e, 0xa4c55a85, 0xb6f4af98, 0xcb1dbb65, 0xc772426d, 0x8a393361, 0x5e0e6c2c, 0x3d38c6d2, 0xe073c5f4, 0x74b0cddd, 0xbbb4468a, 0xbf046823, 0x5ae0ca06, 0xc200c70f, 0x6edabd3b, 0x17a24bdf, 0x6da49b4, 0x85770bd2, 0x558f8e7, 0x2db779ba, 0x6e37a6a0, 0x36f950cb, 0x7bc1e390, 0xa668711a, 0xac516b2e, 0x286e5a77, 0x5ab234a2, 0xbb742d8e, 0xe87d4f13, 0x13ceef81, 0x3b22ecc1, 0xfe3c3917, 0x6c6bf74f, 0x4fefad3a, 0xb122645f, 0xa273f277, 0xc59b1a79, 0x6d63b24e, 0xf0a3332, 0x972cd317, 0xc1cc8d5b, 0x143bf9a5, 0x47bd74bb, 0x999f033b, 0xde9447d6, 0x7d80cc07, 0xbe3f1a2a, 0x46bdf4ce, 0x82f95d8d, 0x33013fc4, 0x384db347, 0x102c24c4, 0xc1f82170, 0x8567a8fe, 0xae822f8b, 0x3d7c2fb1, 0xe27df801, 0xdc64d35a};
-uint32_t power[] = {0x26aaea6d, 0x32bd5122, 0x88c9d5f9, 0x797542cf, 0x97d4959e, 0x459478aa, 0x622fff7a, 0x497cfe44, 0xa1b17c19, 0x25dbf182, 0x404d87e7, 0x9b8b869b, 0x42891e6c, 0x4745dc1, 0xab450a47, 0xb961a359, 0x4c6bc9f4, 0xfe79f939, 0xfd13779d, 0x88cca6ca, 0xc81bb5ef, 0xbc7f2f84, 0x4d0917d7, 0x35fe4ff7, 0x24545c43, 0x44c4a3ab, 0x5209083d, 0xfbba642e, 0xef4a751d, 0x4f3486bf, 0xffdedad, 0x85b857ca, 0xcffabfd7, 0x6669436d, 0xe29069dc, 0x77d114f9, 0x5ef6950e, 0xa21cc95f, 0xa78deb5b, 0x3a6e47b8, 0x398baf1e, 0x60404bc5, 0xcd53dfd4, 0xe4a62641, 0xba330a0, 0xe7fcacff, 0x2f7a67, 0x3f86b5d9, 0xb0de3253, 0x20f16120, 0x26c53e70, 0x491e4643, 0xe58af8cc, 0xf9ca62c2, 0x190b071c, 0xba044aa0, 0xac15fb39, 0xb4ca5a23, 0x69c8c4f7, 0xa257636c, 0x1c76a4e6, 0xe13df6a5, 0x986e9237, 0x862dc281};
-uint32_t expo[] = {0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
-uint32_t random_word_base_check(int x) {
-  return basecheck[x];
-}
-
-void random_words_base_check(uint32_t *x, uint32_t count) {
-  int index;
-
-  for(index=count;index<count+32;index++)
-    x[index-count]=random_word_base_check(index);
-}
-//power
-uint32_t random_word_power(int x) {
-  return power[x];
-}
-void random_words_power(uint32_t *x, uint32_t count) {
-  int index;
-
-  for(index=count;index<count+32;index++)
-    x[index-count]=random_word_power(index);
-}
-//exp
-uint32_t random_word_exp(int x) {
-  return expo[x];
-}
-
-void random_words_exp(uint32_t *x, uint32_t count) {
-  int index;
-
-  for(index=count;index<count+32;index++)
-    x[index-count]=random_word_exp(index);
-}
 template<uint32_t tpi, uint32_t bits, uint32_t window_bits>
 class powm_params_t {
   public:
@@ -226,57 +216,55 @@ class powm_odd_t {
     int         index;
   
     for(index=0;index<count;index++) {
-      random_words_base_check(instances[index].x._limbs,32*index);
-      random_words_power(instances[index].power._limbs, 32*index);
-      random_words_exp(instances[index].modulus._limbs, 32*index);
+      random_words(instances[index].x._limbs, params::BITS/32);
+      random_words(instances[index].power._limbs, params::BITS/32);
+      random_words(instances[index].modulus._limbs, params::BITS/32);
 
       // ensure modulus is odd
       instances[index].modulus._limbs[0] |= 1;
 
       // ensure modulus is greater than 
       if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)>0) {
-       swap_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32);
+        swap_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32);
         
         // modulus might now be even, ensure it's odd
-       instances[index].modulus._limbs[0] |= 1;
+        instances[index].modulus._limbs[0] |= 1;
       }
       else if(compare_words(instances[index].x._limbs, instances[index].modulus._limbs, params::BITS/32)==0) {
         // since modulus is odd and modulus = x, we can just subtract 1 from x
-       instances[index].x._limbs[0] -= 1;
-     }
+        instances[index].x._limbs[0] -= 1;
+      }
     }
     return instances;
   }
   
   __host__ static void verify_results(instance_t *instances, uint32_t count) {
-    mpz_t x, p, m, computed;
+    mpz_t x, p, m, computed, correct;
     
     mpz_init(x);
     mpz_init(p);
     mpz_init(m);
     mpz_init(computed);
+    mpz_init(correct);
     
     for(int index=0;index<count;index++) {
       to_mpz(x, instances[index].x._limbs, params::BITS/32);
       to_mpz(p, instances[index].power._limbs, params::BITS/32);
       to_mpz(m, instances[index].modulus._limbs, params::BITS/32);
       to_mpz(computed, instances[index].result._limbs, params::BITS/32);
-      if(mpz_cmp_ui(computed,1)== 0) {
-         printf ("hi");
+      
+      mpz_powm(correct, x, p, m);
+      if(mpz_cmp(correct, computed)!=0) {
+        printf("gpu inverse kernel failed on instance %d\n", index);
+        return;
       }
-      mpz_out_str (stdout, 16, x);
-      printf ("\n");
-      mpz_out_str (stdout, 16, p);
-      printf ("\n");
-      mpz_out_str (stdout, 16, m);
-      printf ("\n");
-      mpz_out_str (stdout, 16, computed);
-      printf ("\n");
-      }
+    }
+  
     mpz_clear(x);
     mpz_clear(p);
     mpz_clear(m);
     mpz_clear(computed);
+    mpz_clear(correct);
     
     printf("All results match\n");
   }
@@ -357,6 +345,6 @@ void run_test(uint32_t instance_count) {
 
 int main() {
   typedef powm_params_t<8, 1024, 5> params;
-  run_test<params>(2);
-  return 0;
+  
+  run_test<params>(10000000);
 }
