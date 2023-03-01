@@ -29,7 +29,10 @@ IN THE SOFTWARE.
 #include <gmp.h>
 #include "cgbn/cgbn.h"
 #include "../utility/support.h"
-
+#include <chrono>
+#include <iostream>
+using namespace std;
+using namespace chrono;
 // For this example, there are quite a few template parameters that are used to generate the actual code.
 // In order to simplify passing many parameters, we use the same approach as the CGBN library, which is to
 // create a container class with static constants and then pass the class.
@@ -322,14 +325,20 @@ void run_test(uint32_t instance_count) {
   CUDA_CHECK(cgbn_error_report_alloc(&report)); 
   
   printf("Running GPU kernel ...\n");
-  
+  auto start = high_resolution_clock::now();
   // launch kernel with blocks=ceil(instance_count/IPB) and threads=TPB
   kernel_powm_odd<params><<<(instance_count+IPB-1)/IPB, TPB>>>(report, gpuInstances, instance_count);
 
   // error report uses managed memory, so we sync the device (or stream) and check for cgbn errors
   CUDA_CHECK(cudaDeviceSynchronize());
   CGBN_CHECK(report);
-    
+  auto stop = high_resolution_clock::now();
+
+    // Calculate the duration
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    // Output the duration in microseconds
+    cout << "Execution time: " << duration.count() << " microseconds" << endl;  
   // copy the instances back from gpuMemory
   printf("Copying results back to CPU ...\n");
   CUDA_CHECK(cudaMemcpy(instances, gpuInstances, sizeof(instance_t)*instance_count, cudaMemcpyDeviceToHost));
