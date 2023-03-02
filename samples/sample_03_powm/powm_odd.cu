@@ -312,18 +312,32 @@ void run_test(uint32_t instance_count) {
   cgbn_error_report_t *report;
   int32_t              TPB=(params::TPB==0) ? 128 : params::TPB;    // default threads per block to 128
   int32_t              TPI=params::TPI, IPB=TPB/TPI;                // IPB is instances per block
-  
+  auto start1 = high_resolution_clock::now();
   printf("Genereating instances ...\n");
   instances=powm_odd_t<params>::generate_instances(instance_count);
-  
+   auto stop1 = high_resolution_clock::now();
+
+    // Calculate the duration
+    auto duration1 = duration_cast<microseconds>(stop1 - start1);
+
+    // Output the duration in microseconds
+    cout << "Execution time: " << duration1.count() << " microseconds" << endl;  
   printf("Copying instances to the GPU ...\n");
+    auto start2 = high_resolution_clock::now();
+
   CUDA_CHECK(cudaSetDevice(0));
   CUDA_CHECK(cudaMalloc((void **)&gpuInstances, sizeof(instance_t)*instance_count));
   CUDA_CHECK(cudaMemcpy(gpuInstances, instances, sizeof(instance_t)*instance_count, cudaMemcpyHostToDevice));
   
   // create a cgbn_error_report for CGBN to report back errors
   CUDA_CHECK(cgbn_error_report_alloc(&report)); 
-  
+   auto stop2 = high_resolution_clock::now();
+
+    // Calculate the duration
+    auto duration2 = duration_cast<microseconds>(stop2 - start2);
+
+    // Output the duration in microseconds
+    cout << "Execution time: " << duration2.count() << " microseconds" << endl;  
   printf("Running GPU kernel ...\n");
   auto start = high_resolution_clock::now();
   // launch kernel with blocks=ceil(instance_count/IPB) and threads=TPB
