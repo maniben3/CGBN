@@ -37,5 +37,5 @@ turing:
 	nvcc $(INC) $(LIB) -I../../include -arch=sm_75 powm_odd.cu -o powmo -lgmp
 
 ampere: 
-	nvcc $(INC) $(LIB) -I../../include -arch=sm_80 powm_odd.cu -o powmo -lgmp
+	nvcc $(INC) $(LIB) -I../../include  powm_odd.cu -o powmo -lgmp
 
