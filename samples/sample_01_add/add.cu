@@ -144,7 +144,7 @@ int main() {
   CUDA_CHECK(cudaMemcpy(instances, gpuInstances, sizeof(instance_t)*INSTANCES, cudaMemcpyDeviceToHost));
   
   printf("Verifying the results ...\n");
- // verify_results(instances, INSTANCES);
+ /verify_results(instances, INSTANCES);
   
   // clean up
   free(instances);
