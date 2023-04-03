@@ -357,7 +357,7 @@ void run_test(uint32_t instance_count) {
   printf("Copying results back to CPU ...\n");
   CUDA_CHECK(cudaMemcpy(instances, gpuInstances, sizeof(instance_t)*instance_count, cudaMemcpyDeviceToHost));
   
-  printf("Verifying the results ...\n");
+  printf("Verifying the pradeep ...\n");
   powm_odd_t<params>::verify_results(instances, instance_count);
   
   // clean up
@@ -367,7 +367,7 @@ void run_test(uint32_t instance_count) {
 }
 
 int main() {
-  typedef powm_params_t<8, 1024, 5> params;
+  typedef powm_params_t<8, 1056, 5> params;
   
-  run_test<params>(1000);
+  run_test<params>(10000);
 }
