@@ -367,7 +367,7 @@ void run_test(uint32_t instance_count) {
 }
 
 int main() {
-  typedef powm_params_t<8, 1024+64+64, 5> params;
+  typedef powm_params_t<8, 512, 5> params;
   
-  run_test<params>(1000000);
+  run_test<params>(10000000);
 }
